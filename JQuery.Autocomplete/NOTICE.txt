@@ -1,0 +1,12 @@
+re-motion Framework
+www.re-motion.org
+Copyright (c) rubicon IT GmbH, www.rubicon.eu
+
+This software embeds code from "Autocomplete - jQuery plugin 1.1pre".
+
+Copyright (c) 2007 Dylan Verheul, Dan G. Switzer, Anjesh Tuladhar, Jörn Zaefferer
+Embedded Revision: jquery.autocomplete.js 5785 2008-07-12 10:37:33Z joern.zaefferer
+Original software available from "http://jquery-plugins.bassistance.de/autocomplete", now archived on "https://github.com/agarzola/jQueryAutocompletePlugin"
+Relevant code (Remotion/ObjectBinding/Web/Res/HTML/Standard/jquery.autocomplete.js in commit "bdec722b56af3f5e32675e35db4ccfeed30cdd08" from 2009-07-13)
+contains a copy of "https://github.com/re-motion/jQueryAutocompletePlugin/commit/cd2fb68e945aa05cc14fbd1c47d6aa39effc248c"
+and forked as https://github.com/re-motion/jQueryAutocompletePlugin

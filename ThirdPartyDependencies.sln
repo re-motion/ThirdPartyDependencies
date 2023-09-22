@@ -1,0 +1,46 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Remotion.ThirdPartyDependency.RobotoFonts", "RobotoFonts\Remotion.ThirdPartyDependency.RobotoFonts.csproj", "{AB898967-588D-41AE-B11C-C152025598BE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Remotion.ThirdParty.Dependency.Jetbrains.Annotations", "Jetbrains.Annotations\Remotion.ThirdParty.Dependency.Jetbrains.Annotations.csproj", "{336B8FF6-3AA4-4688-AEFF-6C8D1FE04E33}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Remotion.ThirdPartyDependency.CommonServiceLocator", "CommonServiceLocator\Remotion.ThirdPartyDependency.CommonServiceLocator.csproj", "{9200FFA6-45D9-4919-9971-6F04E44442E4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Remotion.ThirdPartyDependency.JQuery.Autocomplete", "JQuery.Autocomplete\Remotion.ThirdPartyDependency.JQuery.Autocomplete.csproj", "{FD3BEAF8-70F6-48C6-84F8-4B4358D09D19}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Remotion.ThirdPartyDependency.DynamicLanguageRuntime", "DynamicLanguageRuntime\Remotion.ThirdPartyDependency.DynamicLanguageRuntime.csproj", "{C31B6094-B9E8-4DAE-A2DE-21F1DB7E4B8B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Remotion.ThirdPartyDependency.System.Web", "System.Web\Remotion.ThirdPartyDependency.System.Web.csproj", "{48F61362-B3B7-432B-9C1A-12C38E81C35D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{AB898967-588D-41AE-B11C-C152025598BE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AB898967-588D-41AE-B11C-C152025598BE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AB898967-588D-41AE-B11C-C152025598BE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AB898967-588D-41AE-B11C-C152025598BE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{336B8FF6-3AA4-4688-AEFF-6C8D1FE04E33}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{336B8FF6-3AA4-4688-AEFF-6C8D1FE04E33}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{336B8FF6-3AA4-4688-AEFF-6C8D1FE04E33}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{336B8FF6-3AA4-4688-AEFF-6C8D1FE04E33}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9200FFA6-45D9-4919-9971-6F04E44442E4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9200FFA6-45D9-4919-9971-6F04E44442E4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9200FFA6-45D9-4919-9971-6F04E44442E4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9200FFA6-45D9-4919-9971-6F04E44442E4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FD3BEAF8-70F6-48C6-84F8-4B4358D09D19}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FD3BEAF8-70F6-48C6-84F8-4B4358D09D19}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FD3BEAF8-70F6-48C6-84F8-4B4358D09D19}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FD3BEAF8-70F6-48C6-84F8-4B4358D09D19}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C31B6094-B9E8-4DAE-A2DE-21F1DB7E4B8B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C31B6094-B9E8-4DAE-A2DE-21F1DB7E4B8B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C31B6094-B9E8-4DAE-A2DE-21F1DB7E4B8B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C31B6094-B9E8-4DAE-A2DE-21F1DB7E4B8B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{48F61362-B3B7-432B-9C1A-12C38E81C35D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{48F61362-B3B7-432B-9C1A-12C38E81C35D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{48F61362-B3B7-432B-9C1A-12C38E81C35D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{48F61362-B3B7-432B-9C1A-12C38E81C35D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
