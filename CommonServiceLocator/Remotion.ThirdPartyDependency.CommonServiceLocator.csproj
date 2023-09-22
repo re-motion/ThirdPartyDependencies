@@ -1,0 +1,29 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <IncludeBuildOutput>false</IncludeBuildOutput>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\_._">
+      <Pack>true</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
+
+  <PropertyGroup>
+    <Owner>RUBICON IT GmbH</Owner>
+    <Version>2.0.6</Version>
+    <Title>CommonServiceLocator (Source Code Dependency)</Title>
+    <Description>The library provides an abstraction over IoC containers and service locators. Using the library allows an application to indirectly access the capabilities without relying on hard references.</Description>
+    <Authors>.Net Foundation and Contributors</Authors>
+    <Copyright>Copyright (c) .NET Foundation and Contributors. All Rights Reserved</Copyright>
+    <PackageLicenseExpression>MS-PL</PackageLicenseExpression>
+    <RepositoryType>git</RepositoryType>
+    <RepositoryUrl>https://github.com/unitycontainer/commonservicelocator</RepositoryUrl>
+    <RepositoryCommit>2d87089f907c7fe0b54cc0fb17d998e781544f90</RepositoryCommit>
+  </PropertyGroup>
+
+</Project>

@@ -1,0 +1,38 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <IncludeBuildOutput>false</IncludeBuildOutput>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="NOTICES.txt">
+      <Pack>true</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
+
+  <PropertyGroup>
+    <Owner>RUBICON IT GmbH</Owner>
+    <Version>4.8.0</Version>
+    <Title>ASP.NET WebForms (Source Code Dependency)</Title>
+    <Description>
+      System.Web
+      System.Web.ApplicationServices
+      System.Web.DynamicData
+      System.Web.Entity
+      System.Web.Extensions
+      System.Web.Extensions.Data.Linq
+      System.Web.RegularExpressions
+      System.Web.Services
+    </Description>
+    <Authors>Microsoft</Authors>
+    <Copyright>Copyright (c) Microsoft Corporation.</Copyright>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <RepositoryType>git</RepositoryType>
+    <RepositoryUrl>https://github.com/microsoft/referencesource</RepositoryUrl>
+    <RepositoryCommit>08b84d13e81cfdbd769a557b368539aac6a9cb30</RepositoryCommit>
+  </PropertyGroup>
+
+</Project>

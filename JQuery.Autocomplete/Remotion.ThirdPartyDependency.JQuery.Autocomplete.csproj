@@ -1,0 +1,29 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <IncludeBuildOutput>false</IncludeBuildOutput>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="NOTICE.txt">
+      <Pack>true</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
+
+  <PropertyGroup>
+    <Owner>RUBICON IT GmbH</Owner>
+    <Version>1.1-pre</Version>
+    <Title>JQuery Autocomplete (Source Code Dependency)</Title>
+    <Description>jQuery Plugin: Autocomplete</Description>
+    <Authors>Dylan Verheul, Dan G. Switzer, Anjesh Tuladhar, Jörn Zaefferer</Authors>
+    <Copyright>Copyright (c) 2007 Dylan Verheul, Dan G. Switzer, Anjesh Tuladhar, Jörn Zaefferer</Copyright>
+    <PackageLicenseExpression>MIT OR GPL-3.0</PackageLicenseExpression>
+    <RepositoryType>Git</RepositoryType>
+    <RepositoryUrl>https://github.com/agarzola/jQueryAutocompletePlugin</RepositoryUrl>
+    <RepositoryCommit>cd2fb68e945aa05cc14fbd1c47d6aa39effc248c</RepositoryCommit>
+  </PropertyGroup>
+
+</Project>
