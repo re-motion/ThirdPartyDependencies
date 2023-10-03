@@ -1,0 +1,17 @@
+re-motion Framework
+www.re-motion.org
+Copyright (c) rubicon IT GmbH, www.rubicon.eu
+
+This software embeds code from "ASP.NET WebForms".
+Copyright (c) Microsoft Corporation
+Original software available from "https://github.com/microsoft/referencesource" Original software available from "https://github.com/microsoft/referencesource".
+Relevant code contains a copy of "https://github.com/microsoft/referencesource/tree/08b84d13e81cfdbd769a557b368539aac6a9cb30/System.Web" and related code parts.
+Relevant code code parts:
+* System.Web
+* System.Web.ApplicationServices
+* System.Web.DynamicData
+* System.Web.Entity
+* System.Web.Extensions
+* System.Web.Extensions.Data.Linq
+* System.Web.RegularExpressions
+* System.Web.Services

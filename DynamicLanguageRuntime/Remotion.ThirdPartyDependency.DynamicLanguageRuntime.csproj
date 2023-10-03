@@ -1,0 +1,29 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <IncludeBuildOutput>false</IncludeBuildOutput>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="NOTICE.txt">
+      <Pack>true</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
+
+  <PropertyGroup>
+    <Owner>RUBICON IT GmbH</Owner>
+    <Version>1.1.0.10</Version>
+    <Title>Microsoft Dynamic Language Runtime (Source Code Dependency)</Title>
+    <Description>The Dynamic Language Runtime enables language developers to more easily create dynamic languages for the .NET platform. In addition to being a pluggable back-end for dynamic language compilers, the DLR provides language interop for dynamic operations on objects. The DLR has common hosting APIs for using dynamic languages as libraries or for scripting in your .NET applications.</Description>
+    <Authors>Microsoft</Authors>
+    <Copyright>Copyright (c) Microsoft Corporation</Copyright>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+    <RepositoryType>git</RepositoryType>
+    <RepositoryUrl>https://github.com/IronLanguages/main</RepositoryUrl>
+    <RepositoryCommit>3dfd952e94c66cdd7f2554602afc463053c1d146</RepositoryCommit>
+  </PropertyGroup>
+
+</Project>
