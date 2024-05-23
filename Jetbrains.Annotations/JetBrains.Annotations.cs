@@ -110,7 +110,7 @@ internal sealed class ItemNotNullAttribute : Attribute { }
 internal sealed class ItemCanBeNullAttribute : Attribute { }
 
   /// <summary>
-  /// Indicates that the marked method builds string by the format pattern and (optional) arguments.
+  /// Indicates that the marked method builds a string by the format pattern and (optional) arguments.
   /// The parameter, which contains the format string, should be given in the constructor. The format string
   /// should be in <see cref="string.Format(IFormatProvider,string,object[])"/>-like form.
   /// </summary>
@@ -128,7 +128,7 @@ internal sealed class ItemCanBeNullAttribute : Attribute { }
 internal sealed class StringFormatMethodAttribute : Attribute
   {
     /// <param name="formatParameterName">
-    /// Specifies which parameter of an annotated method should be treated as the format string
+    /// Specifies which parameter of an annotated method should be treated as the format string.
     /// </param>
     public StringFormatMethodAttribute([NotNull] string formatParameterName)
     {
@@ -140,7 +140,7 @@ internal sealed class StringFormatMethodAttribute : Attribute
 
   /// <summary>
   /// Indicates that the marked parameter is a message template where placeholders are to be replaced by the following arguments
-  /// in the order in which they appear
+  /// in the order in which they appear.
   /// </summary>
   /// <example><code>
   /// void LogInfo([StructuredMessageTemplate]string message, params object[] args) { /* do something */ }
@@ -253,8 +253,8 @@ internal sealed class NonNegativeValueAttribute : Attribute { }
 
   /// <summary>
   /// Indicates that the function argument should be a string literal and match
-  /// one of the parameters of the caller function. This annotation is used for paramerers
-  /// like 'string paramName' parameter of the <see cref="System.ArgumentNullException"/> constuctor.
+  /// one of the parameters of the caller function. This annotation is used for parameters
+  /// like 'string paramName' parameter of the <see cref="System.ArgumentNullException"/> constructor.
   /// </summary>
   /// <example><code>
   /// void Foo(string param) {
@@ -316,7 +316,7 @@ internal sealed class NotifyPropertyChangedInvocatorAttribute : Attribute
   }
 
   /// <summary>
-  /// Describes dependency between method input and output.
+  /// Describes dependence between method input and output.
   /// </summary>
   /// <syntax>
   /// <p>Function Definition Table syntax:</p>
@@ -423,7 +423,7 @@ internal sealed class CannotApplyEqualityOperatorAttribute : Attribute { }
 
   /// <summary>
   /// When applied to a target attribute, specifies a requirement for any type marked
-  /// with the target attribute to implement or inherit specific type or types.
+  /// with the target attribute to implement or inherit the specific type or types.
   /// </summary>
   /// <example><code>
   /// [BaseTypeRequired(typeof(IComponent)] // Specify requirement
@@ -516,7 +516,7 @@ internal sealed class MeansImplicitUseAttribute : Attribute
   }
 
   /// <summary>
-  /// Specifies the details of implicitly used symbol when it is marked
+  /// Specifies the details of an implicitly used symbol when it is marked
   /// with <see cref="MeansImplicitUseAttribute"/> or <see cref="UsedImplicitlyAttribute"/>.
   /// </summary>
   [Flags]
@@ -554,7 +554,7 @@ internal enum ImplicitUseTargetFlags
   }
 
   /// <summary>
-  /// This attribute is intended to mark publicly available API,
+  /// This attribute is intended to mark publicly available APIs,
   /// which should not be removed and so is treated as used.
   /// </summary>
   [MeansImplicitUse(ImplicitUseTargetFlags.WithMembers)]
@@ -573,17 +573,17 @@ internal sealed class PublicAPIAttribute : Attribute
 
   /// <summary>
   /// Tells the code analysis engine if the parameter is completely handled when the invoked method is on stack.
-  /// If the parameter is a delegate, indicates that delegate can only be invoked during method execution
+  /// If the parameter is a delegate, indicates that the delegate can only be invoked during method execution
   /// (the delegate can be invoked zero or multiple times, but not stored to some field and invoked later,
   /// when the containing method is no longer on the execution stack).
   /// If the parameter is an enumerable, indicates that it is enumerated while the method is executed.
-  /// If <see cref="RequireAwait"/> is true, the attribute will only takes effect if the method invocation is located under the 'await' expression.
+  /// If <see cref="RequireAwait"/> is true, the attribute will only take effect if the method invocation is located under the 'await' expression.
   /// </summary>
   [AttributeUsage(AttributeTargets.Parameter)]
 internal sealed class InstantHandleAttribute : Attribute
   {
     /// <summary>
-    /// Require the method invocation to be used under the 'await' expression for this attribute to take effect on code analysis engine.
+    /// Require the method invocation to be used under the 'await' expression for this attribute to take effect on the code analysis engine.
     /// Can be used for delegate/enumerable parameters of 'async' methods.
     /// </summary>
     public bool RequireAwait { get; set; }
@@ -628,16 +628,67 @@ internal sealed class MustUseReturnValueAttribute : Attribute
   }
 
   /// <summary>
+  /// Indicates that the resource disposal must be handled by the use site,
+  /// meaning that the resource ownership is transferred to the callee.
+  /// This annotation can be used to annotate disposable types or their constructors individually to enable
+  /// the resource disposal IDE code analysis in every context where the new instance of this type is created.
+  /// Factory methods and 'out' parameters can also be annotated to indicate that the return value of disposable type
+  /// needs handling.
+  /// </summary>
+  /// <remarks>
+  /// Annotation of input parameters with this attribute is meaningless.<br/>
+  /// Constructors inherit this attribute from their type, if it is annotated,
+  /// but not from the base constructors they delegate to (if any).<br/>
+  /// Resource disposal is expected to be expressed via either <c>using (resource)</c> statement,
+  /// <c>using var</c> declaration, explicit 'Dispose' method call, or an argument passing
+  /// to a parameter with the <see cref="HandlesResourceDisposalAttribute"/> attribute applied.
+  /// </remarks>
+  [AttributeUsage(
+    AttributeTargets.Class | AttributeTargets.Constructor | AttributeTargets.Method | AttributeTargets.Parameter)]
+internal sealed class MustDisposeResourceAttribute : Attribute
+  {
+    public MustDisposeResourceAttribute()
+    {
+      Value = true;
+    }
+
+    public MustDisposeResourceAttribute(bool value)
+    {
+      Value = value;
+    }
+
+    /// <summary>
+    /// When set to <c>false</c>, disposing of the resource is not obligatory.
+    /// The main use-case for explicit <c>[MustDisposeResource(false)]</c> annotation is to loosen inherited annotation.
+    /// </summary>
+    public bool Value { get; }
+  }
+
+  /// <summary>
+  /// Indicates that method or class instance acquires resource ownership and will dispose it after use.
+  /// </summary>
+  /// <remarks>
+  /// Annotation of 'out' parameter with this attribute is meaningless.<br/>
+  /// When a instance method is annotated with this attribute,
+  /// it means that it is handling the resource disposal of the corresponding resource instance.<br/>
+  /// When a field or a property is annotated with this attribute, it means that this type owns the resource
+  /// and will handle the resource disposal properly (e.g. in own IDisposable implementation).
+  /// </remarks>
+  [AttributeUsage(
+    AttributeTargets.Method | AttributeTargets.Parameter | AttributeTargets.Field | AttributeTargets.Property)]
+internal sealed class HandlesResourceDisposalAttribute : Attribute { }
+
+  /// <summary>
   /// This annotation allows to enforce allocation-less usage patterns of delegates for performance-critical APIs.
-  /// When this annotation is applied to the parameter of delegate type, IDE checks the input argument of this parameter:
-  /// * When lambda expression or anonymous method is passed as an argument, IDE verifies that the passed closure
+  /// When this annotation is applied to the parameter of delegate type, the IDE checks the input argument of this parameter:
+  /// * When a lambda expression or anonymous method is passed as an argument, the IDE verifies that the passed closure
   ///   has no captures of the containing local variables and the compiler is able to cache the delegate instance
-  ///   to avoid heap allocations. Otherwise the warning is produced.
-  /// * IDE warns when method name or local function name is passed as an argument as this always results
+  ///   to avoid heap allocations. Otherwise a warning is produced.
+  /// * The IDE warns when the method name or local function name is passed as an argument as this always results
   ///   in heap allocation of the delegate instance.
   /// </summary>
   /// <remarks>
-  /// In C# 9.0 code IDE would also suggest to annotate the anonymous function with 'static' modifier
+  /// In C# 9.0+ code, the IDE will also suggest to annotate the anonymous function with the 'static' modifier
   /// to make use of the similar analysis provided by the language/compiler.
   /// </remarks>
   [AttributeUsage(AttributeTargets.Parameter)]
@@ -647,9 +698,9 @@ internal sealed class RequireStaticDelegateAttribute : Attribute
   }
 
   /// <summary>
-  /// Indicates the type member or parameter of some type, that should be used instead of all other ways
+  /// Indicates the type member or parameter of some type that should be used instead of all other ways
   /// to get the value of that type. This annotation is useful when you have some "context" value evaluated
-  /// and stored somewhere, meaning that all other ways to get this value must be consolidated with existing one.
+  /// and stored somewhere, meaning that all other ways to get this value must be consolidated with the existing one.
   /// </summary>
   /// <example><code>
   /// class Foo {
@@ -670,7 +721,7 @@ internal sealed class ProvidesContextAttribute : Attribute { }
   /// Indicates that a parameter is a path to a file or a folder within a web project.
   /// Path can be relative or absolute, starting from web root (~).
   /// </summary>
-  [AttributeUsage(AttributeTargets.Parameter)]
+  [AttributeUsage(AttributeTargets.Parameter | AttributeTargets.Field | AttributeTargets.Property)]
 internal sealed class PathReferenceAttribute : Attribute
   {
     public PathReferenceAttribute() { }
@@ -686,17 +737,18 @@ internal sealed class PathReferenceAttribute : Attribute
   /// <summary>
   /// An extension method marked with this attribute is processed by code completion
   /// as a 'Source Template'. When the extension method is completed over some expression, its source code
-  /// is automatically expanded like a template at call site.
+  /// is automatically expanded like a template at the call site.
   /// </summary>
   /// <remarks>
-  /// Template method body can contain valid source code and/or special comments starting with '$'.
+  /// Template method bodies can contain valid source code and/or special comments starting with '$'.
   /// Text inside these comments is added as source code when the template is applied. Template parameters
   /// can be used either as additional method parameters or as identifiers wrapped in two '$' signs.
   /// Use the <see cref="MacroAttribute"/> attribute to specify macros for parameters.
+  /// The expression to be used in the expansion can be adjusted by the <see cref="SourceTemplateAttribute.Target"/> parameter.
   /// </remarks>
   /// <example>
   /// In this example, the 'forEach' method is a source template available over all values
-  /// of enumerable types, producing ordinary C# 'foreach' statement and placing caret inside block:
+  /// of enumerable types, producing ordinary C# 'foreach' statement and placing the caret inside the block:
   /// <code>
   /// [SourceTemplate]
   /// public static void forEach&lt;T&gt;(this IEnumerable&lt;T&gt; xs) {
@@ -707,7 +759,31 @@ internal sealed class PathReferenceAttribute : Attribute
   /// </code>
   /// </example>
   [AttributeUsage(AttributeTargets.Method)]
-internal sealed class SourceTemplateAttribute : Attribute { }
+internal sealed class SourceTemplateAttribute : Attribute
+  {
+    /// <summary>
+    /// Allows specifying which expression to capture for template execution if more than one present on the expansion.
+    /// If not specified, <see cref="SourceTemplateTargetExpression.Inner"/> is assumed.
+    /// </summary>
+    public SourceTemplateTargetExpression Target { get; set; }
+  }
+
+  /// <summary>
+  /// Provides a value for the <see cref="SourceTemplateAttribute"/> to define how to capture
+  /// the expression at the point of expansion
+  /// </summary>
+internal enum SourceTemplateTargetExpression
+  {
+    /// <summary>Selects inner expression</summary>
+    /// <example><c>value > 42.{caret}</c> captures <c>42</c></example>
+    /// <example><c>_args = args.{caret}</c> captures <c>args</c></example>
+    Inner = 0,
+
+    /// <summary>Selects outer expression</summary>
+    /// <example><c>value > 42.{caret}</c> captures <c>value > 42</c></example>
+    /// <example><c>_args = args.{caret}</c> captures whole assignment</example>
+    Outer = 1
+  }
 
   /// <summary>
   /// Allows specifying a macro for a parameter of a <see cref="SourceTemplateAttribute">source template</see>.
@@ -716,7 +792,7 @@ internal sealed class SourceTemplateAttribute : Attribute { }
   /// You can apply the attribute on the whole method or on any of its additional parameters. The macro expression
   /// is defined in the <see cref="MacroAttribute.Expression"/> property. When applied on a method, the target
   /// template parameter is defined in the <see cref="MacroAttribute.Target"/> property. To apply the macro silently
-  /// for the parameter, set the <see cref="MacroAttribute.Editable"/> property value = -1.
+  /// for the parameter, set the <see cref="MacroAttribute.Editable"/> property value to -1.
   /// </remarks>
   /// <example>
   /// Applying the attribute on a source template method:
@@ -764,9 +840,9 @@ internal sealed class MacroAttribute : Attribute
   }
 
   /// <summary>
-  /// Indicates how method, constructor invocation, or property access
-  /// over collection type affects the contents of the collection.
-  /// When applied to a return value of a method indicates if the returned collection
+  /// Indicates how a method, constructor invocation, or property access
+  /// over a collection type affects the contents of the collection.
+  /// When applied to a return value of a method, indicates if the returned collection
   /// is created exclusively for the caller (CollectionAccessType.UpdatedContent) or
   /// can be read/updated from outside (CollectionAccessType.Read | CollectionAccessType.UpdatedContent)
   /// Use <see cref="CollectionAccessType"/> to specify the access type.
@@ -822,7 +898,7 @@ internal enum CollectionAccessType
   }
 
   /// <summary>
-  /// Indicates that the marked method is assertion method, i.e. it halts the control flow if
+  /// Indicates that the marked method is an assertion method, i.e. it halts the control flow if
   /// one of the conditions is satisfied. To set the condition, mark one of the parameters with
   /// <see cref="AssertionConditionAttribute"/> attribute.
   /// </summary>
@@ -831,7 +907,7 @@ internal sealed class AssertionMethodAttribute : Attribute { }
 
   /// <summary>
   /// Indicates the condition parameter of the assertion method. The method itself should be
-  /// marked by <see cref="AssertionMethodAttribute"/> attribute. The mandatory argument of
+  /// marked by the <see cref="AssertionMethodAttribute"/> attribute. The mandatory argument of
   /// the attribute is the assertion type.
   /// </summary>
   [AttributeUsage(AttributeTargets.Parameter)]
@@ -846,7 +922,7 @@ internal sealed class AssertionConditionAttribute : Attribute
   }
 
   /// <summary>
-  /// Specifies assertion type. If the assertion method argument satisfies the condition,
+  /// Specifies the assertion type. If the assertion method argument satisfies the condition,
   /// then the execution continues. Otherwise, execution is assumed to be halted.
   /// </summary>
 internal enum AssertionConditionType
@@ -863,7 +939,7 @@ internal enum AssertionConditionType
 
   /// <summary>
   /// Indicates that the marked method unconditionally terminates control flow execution.
-  /// For example, it could unconditionally throw exception.
+  /// For example, it could unconditionally throw an exception.
   /// </summary>
   [Obsolete("Use [ContractAnnotation('=> halt')] instead")]
   [AttributeUsage(AttributeTargets.Method)]
@@ -903,25 +979,30 @@ internal sealed class NoEnumerationAttribute : Attribute { }
 internal sealed class RegexPatternAttribute : Attribute { }
 
   /// <summary>
-  /// Language of injected code fragment inside marked by <see cref="LanguageInjectionAttribute"/> string literal.
+  /// Language of injected code fragment inside marked by the <see cref="LanguageInjectionAttribute"/> string literal.
   /// </summary>
 internal enum InjectedLanguage
   {
-    CSS,
-    HTML,
-    JAVASCRIPT,
-    JSON,
-    XML
+    CSS = 0,
+    HTML = 1,
+    JAVASCRIPT = 2,
+    JSON = 3,
+    XML = 4
   }
 
   /// <summary>
   /// Indicates that the marked parameter, field, or property is accepting a string literal
-  /// containing code fragment in a language specified by the <see cref="InjectedLanguage"/>.
+  /// containing code fragments in a specified language.
   /// </summary>
   /// <example><code>
   /// void Foo([LanguageInjection(InjectedLanguage.CSS, Prefix = "body{", Suffix = "}")] string cssProps)
   /// {
   ///   // cssProps should only contains a list of CSS properties
+  /// }
+  /// </code></example>
+  /// <example><code>
+  /// void Bar([LanguageInjection("json")] string json)
+  /// {
   /// }
   /// </code></example>
   [AttributeUsage(AttributeTargets.Parameter | AttributeTargets.Field | AttributeTargets.Property)]
@@ -932,13 +1013,21 @@ internal sealed class LanguageInjectionAttribute : Attribute
       InjectedLanguage = injectedLanguage;
     }
 
-    /// <summary>Specify a language of injected code fragment.</summary>
+    public LanguageInjectionAttribute([NotNull] string injectedLanguage)
+    {
+      InjectedLanguageName = injectedLanguage;
+    }
+
+    /// <summary>Specifies a language of the injected code fragment.</summary>
     public InjectedLanguage InjectedLanguage { get; }
 
-    /// <summary>Specify a string that "precedes" injected string literal.</summary>
+    /// <summary>Specifies a language name of the injected code fragment.</summary>
+    [CanBeNull] public string InjectedLanguageName { get; }
+
+    /// <summary>Specifies a string that "precedes" the injected string literal.</summary>
     [CanBeNull] public string Prefix { get; set; }
 
-    /// <summary>Specify a string that "follows" injected string literal.</summary>
+    /// <summary>Specifies a string that "follows" the injected string literal.</summary>
     [CanBeNull] public string Suffix { get; set; }
   }
 
@@ -949,7 +1038,7 @@ internal sealed class LanguageInjectionAttribute : Attribute
   /// The attribute must be mentioned in your member reordering patterns.
   /// </remarks>
   [AttributeUsage(
-    AttributeTargets.Class | AttributeTargets.Interface | AttributeTargets.Struct | AttributeTargets.Enum)]
+    AttributeTargets.Class | AttributeTargets.Interface | AttributeTargets.Struct | AttributeTargets.Enum, AllowMultiple = true)]
 internal sealed class NoReorderAttribute : Attribute { }
 
   /// <summary>
@@ -967,7 +1056,7 @@ internal sealed class NoReorderAttribute : Attribute { }
   /// <item>$this$ - expression of containing type</item>
   /// <item>$thisType$ - containing type</item>
   /// <item>$member$ - current member placeholder</item>
-  /// <item>$qualifier$ - this placeholder is available in the replace pattern and can be used to insert qualifier expression matched by the $member$ placeholder.
+  /// <item>$qualifier$ - this placeholder is available in the replace pattern and can be used to insert a qualifier expression matched by the $member$ placeholder.
   /// (Note that if $qualifier$ placeholder is used, then $member$ placeholder will match only qualified references)</item>
   /// <item>$expression$ - expression of any type</item>
   /// <item>$identifier$ - identifier placeholder</item>
@@ -988,8 +1077,8 @@ internal sealed class NoReorderAttribute : Attribute { }
   /// Note that you can also define your own placeholders of the supported types and specify arguments for each placeholder type.
   /// This can be done using the following format: $name{type, arguments}$. Where 'name' - is the name of your placeholder,
   /// 'type' - is the type of your placeholder (one of the following: Expression, Type, Identifier, Statement, Argument, Member),
-  /// 'arguments' - arguments list for your placeholder. Each placeholder type supports it's own arguments, check examples below for mode details.
-  /// Placeholder type may be omitted and determined from the placeholder name, if name has one of the following prefixes:
+  /// 'arguments' - arguments list for your placeholder. Each placeholder type supports its own arguments, check examples below for more details.
+  /// The placeholder type may be omitted and determined from the placeholder name, if the name has one of the following prefixes:
   /// <list type="bullet">
   /// <item>expr, expression - expression placeholder, e.g. $exprPlaceholder{}$, $expressionFoo{}$</item>
   /// <item>arg, argument - argument placeholder, e.g. $argPlaceholder{}$, $argumentFoo{}$</item>
@@ -1104,7 +1193,7 @@ internal sealed class CodeTemplateAttribute : Attribute
 
     /// <summary>
     /// Structural search pattern to use in the code template.
-    /// Pattern includes textual part, which must contain only identifiers allowed in the target language,
+    /// The pattern includes a textual part, which must contain only identifiers allowed in the target language,
     /// and placeholders, which allow matching variable parts of the target code blocks.
     /// </summary>
     public string SearchTemplate { get; }
@@ -1112,8 +1201,8 @@ internal sealed class CodeTemplateAttribute : Attribute
     /// <summary>
     /// Message to show when the search pattern was found.
     /// You can also prepend the message text with "Error:", "Warning:", "Suggestion:" or "Hint:" prefix to specify the pattern severity.
-    /// Code patterns with replace template produce suggestions by default.
-    /// However, if replace template is not provided, then warning severity will be used.
+    /// Code patterns with replace templates produce suggestions by default.
+    /// However, if a replace template is not provided, then warning severity will be used.
     /// </summary>
     public string Message { get; set; }
 
@@ -1123,7 +1212,7 @@ internal sealed class CodeTemplateAttribute : Attribute
     public string ReplaceTemplate { get; set; }
 
     /// <summary>
-    /// Replace message to show in the light bulb.
+    /// The replace message to show in the light bulb.
     /// </summary>
     public string ReplaceMessage { get; set; }
 
@@ -1143,11 +1232,20 @@ internal sealed class CodeTemplateAttribute : Attribute
     public bool ShortenReferences { get; set; }
 
     /// <summary>
-    /// String to use as a suppression key.
+    /// The string to use as a suppression key.
     /// By default the following suppression key is used 'CodeTemplate_SomeType_SomeMember',
     /// where 'SomeType' and 'SomeMember' are names of the associated containing type and member to which this attribute is applied.
     /// </summary>
     public string SuppressionKey { get; set; }
+  }
+
+  /// <summary>
+  /// Indicates that the string literal, passed as an argument matching this parameter,
+  /// should not be checked on spelling or grammar errors.
+  /// </summary>
+  [AttributeUsage(AttributeTargets.Parameter)]
+internal sealed class IgnoreSpellingAndGrammarErrorsAttribute : Attribute
+  {
   }
 
   #region ASP.NET
@@ -1224,6 +1322,17 @@ internal sealed class AspMvcAreaPartialViewLocationFormatAttribute : Attribute
   }
 
   [AttributeUsage(AttributeTargets.Assembly | AttributeTargets.Field | AttributeTargets.Property, AllowMultiple = true)]
+internal sealed class AspMvcAreaViewComponentViewLocationFormatAttribute : Attribute
+  {
+    public AspMvcAreaViewComponentViewLocationFormatAttribute([NotNull] string format)
+    {
+      Format = format;
+    }
+
+    [NotNull] public string Format { get; }
+  }
+
+  [AttributeUsage(AttributeTargets.Assembly | AttributeTargets.Field | AttributeTargets.Property, AllowMultiple = true)]
 internal sealed class AspMvcAreaViewLocationFormatAttribute : Attribute
   {
     public AspMvcAreaViewLocationFormatAttribute([NotNull] string format)
@@ -1249,6 +1358,17 @@ internal sealed class AspMvcMasterLocationFormatAttribute : Attribute
 internal sealed class AspMvcPartialViewLocationFormatAttribute : Attribute
   {
     public AspMvcPartialViewLocationFormatAttribute([NotNull] string format)
+    {
+      Format = format;
+    }
+
+    [NotNull] public string Format { get; }
+  }
+
+  [AttributeUsage(AttributeTargets.Assembly | AttributeTargets.Field | AttributeTargets.Property, AllowMultiple = true)]
+internal sealed class AspMvcViewComponentViewLocationFormatAttribute : Attribute
+  {
+    public AspMvcViewComponentViewLocationFormatAttribute([NotNull] string format)
     {
       Format = format;
     }
@@ -1429,13 +1549,13 @@ internal sealed class RouteTemplateAttribute : Attribute { }
 
   /// <summary>
   /// Indicates that the marked type is custom route parameter constraint,
-  /// which is registered in application's Startup with name <c>ConstraintName</c>
+  /// which is registered in the application's Startup with the name <c>ConstraintName</c>.
   /// </summary>
   /// <remarks>
   /// You can specify <c>ProposedType</c> if target constraint matches only route parameters of specific type,
   /// it will allow IDE to create method's parameter from usage in route template
   /// with specified type instead of default <c>System.String</c>
-  /// and check if constraint's proposed type conflicts with matched parameter's type
+  /// and check if constraint's proposed type conflicts with matched parameter's type.
   /// </remarks>
   [AttributeUsage(AttributeTargets.Class)]
 internal sealed class RouteParameterConstraintAttribute : Attribute
@@ -1453,8 +1573,8 @@ internal sealed class RouteParameterConstraintAttribute : Attribute
   /// Indicates that the marked parameter, field, or property is an URI string.
   /// </summary>
   /// <remarks>
-  /// This attribute enables code completion, navigation, rename and other features
-  /// in URI string literals assigned to annotated parameter, field or property.
+  /// This attribute enables code completion, navigation, renaming and other features
+  /// in URI string literals assigned to annotated parameters, fields, or properties.
   /// </remarks>
   [AttributeUsage(AttributeTargets.Parameter | AttributeTargets.Field | AttributeTargets.Property)]
 internal sealed class UriStringAttribute : Attribute
@@ -1470,11 +1590,11 @@ internal sealed class UriStringAttribute : Attribute
   }
 
   /// <summary>
-  /// Indicates that the marked method declares routing convention for ASP.NET
+  /// Indicates that the marked method declares routing convention for ASP.NET.
   /// </summary>
   /// <remarks>
-  /// IDE will analyze all usages of methods marked with this attribute,
-  /// and will add all routes to completion, navigation and other features over URI strings
+  /// The IDE will analyze all usages of methods marked with this attribute,
+  /// and will add all routes to completion, navigation, and other features over URI strings.
   /// </remarks>
   [AttributeUsage(AttributeTargets.Method)]
 internal sealed class AspRouteConventionAttribute : Attribute
@@ -1490,35 +1610,35 @@ internal sealed class AspRouteConventionAttribute : Attribute
   }
 
   /// <summary>
-  /// Indicates that the marked method parameter contains default route values of routing convention for ASP.NET
+  /// Indicates that the marked method parameter contains default route values of routing convention for ASP.NET.
   /// </summary>
   [AttributeUsage(AttributeTargets.Parameter)]
 internal sealed class AspDefaultRouteValuesAttribute : Attribute { }
 
   /// <summary>
-  /// Indicates that the marked method parameter contains constraints on route values of routing convention for ASP.NET
+  /// Indicates that the marked method parameter contains constraints on route values of routing convention for ASP.NET.
   /// </summary>
   [AttributeUsage(AttributeTargets.Parameter)]
 internal sealed class AspRouteValuesConstraintsAttribute : Attribute { }
 
   /// <summary>
-  /// Indicates that the marked parameter or property contains routing order provided by ASP.NET routing attribute
+  /// Indicates that the marked parameter or property contains routing order provided by ASP.NET routing attribute.
   /// </summary>
   [AttributeUsage(AttributeTargets.Property | AttributeTargets.Parameter)]
 internal sealed class AspRouteOrderAttribute : Attribute { }
 
   /// <summary>
-  /// Indicates that the marked parameter or property contains HTTP verbs provided by ASP.NET routing attribute
+  /// Indicates that the marked parameter or property contains HTTP verbs provided by ASP.NET routing attribute.
   /// </summary>
   [AttributeUsage(AttributeTargets.Property | AttributeTargets.Parameter)]
 internal sealed class AspRouteVerbsAttribute : Attribute { }
 
   /// <summary>
-  /// Indicates that the marked attribute is used for attribute routing in ASP.NET
+  /// Indicates that the marked attribute is used for attribute routing in ASP.NET.
   /// </summary>
   /// <remarks>
-  /// IDE will analyze all usages of attributes marked with this attribute,
-  /// and will add all routes to completion, navigation and other features over URI strings
+  /// The IDE will analyze all usages of attributes marked with this attribute,
+  /// and will add all routes to completion, navigation and other features over URI strings.
   /// </remarks>
   [AttributeUsage(AttributeTargets.Class)]
 internal sealed class AspAttributeRoutingAttribute : Attribute
@@ -1527,11 +1647,11 @@ internal sealed class AspAttributeRoutingAttribute : Attribute
   }
 
   /// <summary>
-  /// Indicates that the marked method declares ASP.NET Minimal API endpoint
+  /// Indicates that the marked method declares an ASP.NET Minimal API endpoint.
   /// </summary>
   /// <remarks>
-  /// IDE will analyze all usages of methods marked with this attribute,
-  /// and will add all routes to completion, navigation and other features over URI strings
+  /// The IDE will analyze all usages of methods marked with this attribute,
+  /// and will add all routes to completion, navigation and other features over URI strings.
   /// </remarks>
   [AttributeUsage(AttributeTargets.Method)]
 internal sealed class AspMinimalApiDeclarationAttribute : Attribute
@@ -1540,10 +1660,38 @@ internal sealed class AspMinimalApiDeclarationAttribute : Attribute
   }
 
   /// <summary>
-  /// Indicates that the marked parameter contains ASP.NET Minimal API endpoint handler
+  /// Indicates that the marked method declares an ASP.NET Minimal API endpoints group.
+  /// </summary>
+  [AttributeUsage(AttributeTargets.Method)]
+internal sealed class AspMinimalApiGroupAttribute : Attribute { }
+
+  /// <summary>
+  /// Indicates that the marked parameter contains an ASP.NET Minimal API endpoint handler.
   /// </summary>
   [AttributeUsage(AttributeTargets.Parameter)]
 internal sealed class AspMinimalApiHandlerAttribute : Attribute { }
+
+  /// <summary>
+  /// Indicates that the marked method contains Minimal API endpoint declaration.
+  /// </summary>
+  /// <remarks>
+  /// The IDE will analyze all usages of methods marked with this attribute,
+  /// and will add all declared in attributes routes to completion, navigation and other features over URI strings.
+  /// </remarks>
+  [AttributeUsage(AttributeTargets.Method, AllowMultiple = true)]
+internal sealed class AspMinimalApiImplicitEndpointDeclarationAttribute : Attribute
+  {
+    public string HttpVerb { get; set; }
+
+    public string RouteTemplate { get; set; }
+
+    public Type BodyType { get; set; }
+
+    /// <summary>
+    /// Comma-separated list of query parameters defined for endpoint
+    /// </summary>
+    public string QueryParameters { get; set; }
+  }
 
   #endregion
 
@@ -1654,27 +1802,27 @@ internal sealed class RazorWriteMethodParameterAttribute : Attribute { }
   #region XAML
 
   /// <summary>
-  /// XAML attribute. Indicates the type that has <c>ItemsSource</c> property and should be treated
-  /// as <c>ItemsControl</c>-derived type, to enable inner items <c>DataContext</c> type resolve.
+  /// XAML attribute. Indicates the type that has an <c>ItemsSource</c> property and should be treated
+  /// as an <c>ItemsControl</c>-derived type, to enable inner items <c>DataContext</c> type resolution.
   /// </summary>
   [AttributeUsage(AttributeTargets.Class)]
 internal sealed class XamlItemsControlAttribute : Attribute { }
 
   /// <summary>
   /// XAML attribute. Indicates the property of some <c>BindingBase</c>-derived type, that
-  /// is used to bind some item of <c>ItemsControl</c>-derived type. This annotation will
+  /// is used to bind some item of an <c>ItemsControl</c>-derived type. This annotation will
   /// enable the <c>DataContext</c> type resolve for XAML bindings for such properties.
   /// </summary>
   /// <remarks>
-  /// Property should have the tree ancestor of the <c>ItemsControl</c> type or
+  /// The property should have the tree ancestor of the <c>ItemsControl</c> type, or
   /// marked with the <see cref="XamlItemsControlAttribute"/> attribute.
   /// </remarks>
   [AttributeUsage(AttributeTargets.Property)]
 internal sealed class XamlItemBindingOfItemsControlAttribute : Attribute { }
 
   /// <summary>
-  /// XAML attribute. Indicates the property of some <c>Style</c>-derived type, that
-  /// is used to style items of <c>ItemsControl</c>-derived type. This annotation will
+  /// XAML attribute. Indicates the property of some <c>Style</c>-derived type that
+  /// is used to style items of an <c>ItemsControl</c>-derived type. This annotation will
   /// enable the <c>DataContext</c> type resolve for XAML bindings for such properties.
   /// </summary>
   /// <remarks>
@@ -1688,7 +1836,7 @@ internal sealed class XamlItemStyleOfItemsControlAttribute : Attribute { }
   /// XAML attribute. Indicates that DependencyProperty has <c>OneWay</c> binding mode by default.
   /// </summary>
   /// <remarks>
-  /// This attribute must be applied to DependencyProperty's CLR accessor property if it is present, to DependencyProperty descriptor field otherwise.
+  /// This attribute must be applied to DependencyProperty's CLR accessor property if it is present, or to a DependencyProperty descriptor field otherwise.
   /// </remarks>
   [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property)]
 internal sealed class XamlOneWayBindingModeByDefaultAttribute : Attribute { }
@@ -1697,10 +1845,66 @@ internal sealed class XamlOneWayBindingModeByDefaultAttribute : Attribute { }
   /// XAML attribute. Indicates that DependencyProperty has <c>TwoWay</c> binding mode by default.
   /// </summary>
   /// <remarks>
-  /// This attribute must be applied to DependencyProperty's CLR accessor property if it is present, to DependencyProperty descriptor field otherwise.
+  /// This attribute must be applied to DependencyProperty's CLR accessor property if it is present, or to a DependencyProperty descriptor field otherwise.
   /// </remarks>
   [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property)]
 internal sealed class XamlTwoWayBindingModeByDefaultAttribute : Attribute { }
+
+  #endregion
+
+  #region Unit Testing
+
+  /// <summary>
+  /// Specifies the subject being tested by a test class or a test method.
+  /// </summary>
+  /// <remarks>
+  /// The <see cref="TestSubjectAttribute"/> can be applied to a test class or a test method to indicate what class
+  /// or interface the tests defined in them test. This information can be used by an IDE to provide better navigation
+  /// support or by test runners to group tests by subject and to provide better test reports.
+  /// </remarks>
+  [AttributeUsage(AttributeTargets.Method | AttributeTargets.Property | AttributeTargets.Class | AttributeTargets.Interface, AllowMultiple = true)]
+internal sealed class TestSubjectAttribute : Attribute
+  {
+    /// <summary>
+    /// Gets the type of the subject being tested.
+    /// </summary>
+    [NotNull] public Type Subject { get; }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="TestSubjectAttribute"/> class with the specified subject type.
+    /// </summary>
+    /// <param name="subject">The type of the subject being tested.</param>
+    public TestSubjectAttribute([NotNull] Type subject)
+    {
+      Subject = subject;
+    }
+  }
+
+  /// <summary>
+  /// Signifies a generic argument as the test subject for a test class.
+  /// </summary>
+  /// <remarks>
+  /// The <see cref="MeansTestSubjectAttribute"/> can be applied to a generic parameter of a base test class to indicate that
+  /// the type passed as the argument is the class being tested. This information can be used by an IDE to provide better
+  /// navigation support or by test runners to group tests by subject and to provide better test reports.
+  /// </remarks>
+  /// <example><code>
+  /// public class BaseTestClass&lt;[MeansTestSubject] T&gt;
+  /// {
+  ///   protected T Component { get; }
+  /// }
+  ///
+  /// public class CalculatorAdditionTests : BaseTestClass&lt;Calculator&gt;
+  /// {
+  ///   [Test]
+  ///   public void Should_add_two_numbers()
+  ///   {
+  ///      Assert.That(Component.Add(2, 3), Is.EqualTo(5));
+  ///   }
+  /// }
+  /// </code></example>
+  [AttributeUsage(AttributeTargets.GenericParameter)]
+internal sealed class MeansTestSubjectAttribute : Attribute { }
 
   #endregion
 }
