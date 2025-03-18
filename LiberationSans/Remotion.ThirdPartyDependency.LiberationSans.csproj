@@ -1,0 +1,29 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <IncludeBuildOutput>false</IncludeBuildOutput>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="COPYRIGHT.txt">
+      <Pack>true</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+    <None Include="LICENSE.txt">
+      <Pack>true</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
+
+  <PropertyGroup>
+    <Owner>RUBICON IT GmbH</Owner>
+    <Version>2.0.1</Version>
+    <Title>Liberation Sans</Title>
+    <Description>LiberationSans Digitized data copyright (c) 2010 Google Corporation. Copyright (c) 2012 Red Hat, Inc.</Description>
+    <Authors>Steve Matteson</Authors>
+    <PackageLicenseExpression>OFL-1.1</PackageLicenseExpression>
+  </PropertyGroup>
+
+</Project>
