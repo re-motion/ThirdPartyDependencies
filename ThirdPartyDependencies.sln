@@ -12,6 +12,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Remotion.ThirdPartyDependen
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Remotion.ThirdPartyDependency.System.Web", "System.Web\Remotion.ThirdPartyDependency.System.Web.csproj", "{48F61362-B3B7-432B-9C1A-12C38E81C35D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Remotion.ThirdPartyDependency.LiberationSans", "LiberationSans\Remotion.ThirdPartyDependency.LiberationSans.csproj", "{07ADAB02-D64D-4711-B196-550571AFE509}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -42,5 +44,9 @@ Global
 		{48F61362-B3B7-432B-9C1A-12C38E81C35D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{48F61362-B3B7-432B-9C1A-12C38E81C35D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{48F61362-B3B7-432B-9C1A-12C38E81C35D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{07ADAB02-D64D-4711-B196-550571AFE509}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{07ADAB02-D64D-4711-B196-550571AFE509}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{07ADAB02-D64D-4711-B196-550571AFE509}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{07ADAB02-D64D-4711-B196-550571AFE509}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
